@@ -55,3 +55,6 @@ user/io.h
 user/stdout.c
 user/stdout.h
 user/user_main.c
+html/index.tpl
+html/led.tpl
+html/style.css
