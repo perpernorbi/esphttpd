@@ -18,9 +18,6 @@ flash as a binary. Also handles the hit counter on the main page.
 #include "io.h"
 
 
-//cause I can't be bothered to write an ioGetLed()
-static char currLedState=0;
-
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 	int len;
@@ -33,8 +30,10 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 
 	len=httpdFindArg(connData->post->buff, "led", buff, sizeof(buff));
 	if (len!=0) {
-		currLedState=atoi(buff);
-		ioLed(currLedState);
+        if (buff[0] == 't')
+            ioLedToggle();
+        else
+            ioLed(atoi(buff));
 	}
 
 	httpdRedirect(connData, "led.tpl");
@@ -50,7 +49,7 @@ int ICACHE_FLASH_ATTR tplLed(HttpdConnData *connData, char *token, void **arg) {
 
 	os_strcpy(buff, "Unknown");
 	if (os_strcmp(token, "ledstate")==0) {
-		if (currLedState) {
+        if (ioGetLed()) {
 			os_strcpy(buff, "on");
 		} else {
 			os_strcpy(buff, "off");

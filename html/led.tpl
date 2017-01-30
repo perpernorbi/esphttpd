@@ -10,6 +10,7 @@ If there's a LED connected to GPIO2, it's now %ledstate%. You can change that us
 <form method="post" action="led.cgi">
 <input type="submit" name="led" value="1">
 <input type="submit" name="led" value="0">
+<input type="submit" name="led" value="t">
 </form>
 </div>
 </body></html>

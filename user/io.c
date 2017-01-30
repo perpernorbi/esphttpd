@@ -16,13 +16,27 @@
 
 static ETSTimer resetBtntimer;
 
+static uint8_t ledState = 0;
+
 void ICACHE_FLASH_ATTR ioLed(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
 	if (ena) {
 		gpio_output_set((1<<LEDGPIO), 0, (1<<LEDGPIO), 0);
+        ledState = 1;
 	} else {
 		gpio_output_set(0, (1<<LEDGPIO), (1<<LEDGPIO), 0);
+        ledState = 0;
 	}
+}
+
+uint8_t ICACHE_FLASH_ATTR ioGetLed()
+{
+    return ledState;
+}
+
+void ICACHE_FLASH_ATTR ioLedToggle()
+{
+    ioLed((ledState)?0:1);
 }
 
 static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg) {
@@ -30,14 +44,17 @@ static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg) {
 	if (!GPIO_INPUT_GET(BTNGPIO)) {
 		resetCnt++;
 	} else {
-		if (resetCnt>=6) { //3 sec pressed
+        if (resetCnt>=30) { //3 sec pressed
 			wifi_station_disconnect();
 			wifi_set_opmode(0x3); //reset to AP+STA mode
 			os_printf("Reset to AP mode. Restarting system...\n");
 			system_restart();
-		}
+        }
 		resetCnt=0;
 	}
+    if (resetCnt == 2) {
+        ioLedToggle();
+    }
 }
 
 void ioInit() {
@@ -46,6 +63,6 @@ void ioInit() {
 	gpio_output_set(0, 0, (1<<LEDGPIO), (1<<BTNGPIO));
 	os_timer_disarm(&resetBtntimer);
 	os_timer_setfn(&resetBtntimer, resetBtnTimerCb, NULL);
-	os_timer_arm(&resetBtntimer, 500, 1);
+    os_timer_arm(&resetBtntimer, 100, 1);
 }
 
