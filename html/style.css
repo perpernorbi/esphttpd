@@ -1,17 +1,30 @@
 
 body {
-	background-color: #404040;
-	font-family: sans-serif;
+    background: #afcbe0;
+    background-image: url("bottom_image.png"); /* fallback */
+    background-image: url("bottom_image.png"), linear-gradient(#afcbe0, #eaeeed);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: bottom;
+    background-size: 100%;
+    text-align: center;
+
 }
 
-#main {
-	background-color: #d0d0FF;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	border: 2px solid #000000;
-	width: 800px;
-	margin: 0 auto;
-	padding: 20px
+h1 {
+    text-align: center;
 }
 
+#bulb {
+    position: relative;
+    height: 25%
+}
+
+#on {
+    position: absolute;
+    height: 100%;
+}
+
+#off {
+    height: 100%
+}

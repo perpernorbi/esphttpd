@@ -121,8 +121,7 @@ should be placed above the URLs they protect.
 HttpdBuiltInUrl builtInUrls[]={
 	{"*", cgiRedirectApClientToHostname, "esp8266.nonet"},
 	{"/", cgiRedirect, "/index.tpl"},
-	{"/led.tpl", cgiEspFsTemplate, tplLed},
-	{"/index.tpl", cgiEspFsTemplate, tplCounter},
+    {"/index.tpl", cgiEspFsTemplate, tplIndex},
 	{"/led.cgi", cgiLed, NULL},
 #ifdef INCLUDE_FLASH_FNS
 	{"/flash/next", cgiGetFirmwareNext, &uploadParams},

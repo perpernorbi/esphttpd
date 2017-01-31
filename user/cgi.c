@@ -27,7 +27,6 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		//Connection aborted. Clean up.
 		return HTTPD_CGI_DONE;
 	}
-
 	len=httpdFindArg(connData->post->buff, "led", buff, sizeof(buff));
 	if (len!=0) {
         if (buff[0] == 't')
@@ -35,40 +34,32 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
         else
             ioLed(atoi(buff));
 	}
-
-	httpdRedirect(connData, "led.tpl");
+    if (ioGetLed())
+        httpdSend(connData, "on", 2);
+    else
+        httpdSend(connData, "off", 3);
+    //httpdRedirect(connData, "led.tpl");
 	return HTTPD_CGI_DONE;
 }
 
 
 
 //Template code for the led page.
-int ICACHE_FLASH_ATTR tplLed(HttpdConnData *connData, char *token, void **arg) {
+int ICACHE_FLASH_ATTR tplIndex(HttpdConnData *connData, char *token, void **arg) {
 	char buff[128];
 	if (token==NULL) return HTTPD_CGI_DONE;
 
-	os_strcpy(buff, "Unknown");
+    os_strcpy(buff, "Unknown");
+
+    if (os_strcmp(token, "devicename") == 0) {
+        os_strcpy(buff, "Chengdu Lamp");
+    }
 	if (os_strcmp(token, "ledstate")==0) {
         if (ioGetLed()) {
 			os_strcpy(buff, "on");
 		} else {
 			os_strcpy(buff, "off");
 		}
-	}
-	httpdSend(connData, buff, -1);
-	return HTTPD_CGI_DONE;
-}
-
-static long hitCounter=0;
-
-//Template code for the counter on the index page.
-int ICACHE_FLASH_ATTR tplCounter(HttpdConnData *connData, char *token, void **arg) {
-	char buff[128];
-	if (token==NULL) return HTTPD_CGI_DONE;
-
-	if (os_strcmp(token, "counter")==0) {
-		hitCounter++;
-		os_sprintf(buff, "%ld", hitCounter);
 	}
 	httpdSend(connData, buff, -1);
 	return HTTPD_CGI_DONE;
