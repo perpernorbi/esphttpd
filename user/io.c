@@ -18,6 +18,12 @@ static ETSTimer resetBtntimer;
 
 static uint8_t ledState = 0;
 
+static void (*statusChangeHandler)(void);
+void ICACHE_FLASH_ATTR ioLedChangeHandler(void (*f)(void))
+{
+    statusChangeHandler = f;
+}
+
 void ICACHE_FLASH_ATTR ioLed(int ena) {
 	//gpio_output_set is overkill. ToDo: use better mactos
 	if (ena) {
@@ -27,6 +33,7 @@ void ICACHE_FLASH_ATTR ioLed(int ena) {
 		gpio_output_set(0, (1<<LEDGPIO), (1<<LEDGPIO), 0);
         ledState = 0;
 	}
+    statusChangeHandler();
 }
 
 uint8_t ICACHE_FLASH_ATTR ioGetLed()

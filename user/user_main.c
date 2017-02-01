@@ -48,31 +48,39 @@ int myPassFn(HttpdConnData *connData, int no, char *user, int userLen, char *pas
 	return 0;
 }
 
-static ETSTimer websockTimer;
+//static ETSTimer websockTimer;
 
 //Broadcast the uptime in seconds every second over connected websockets
-static void ICACHE_FLASH_ATTR websockTimerCb(void *arg) {
-	static int ctr=0;
-	char buff[128];
-	ctr++;
-	os_sprintf(buff, "Up for %d minutes %d seconds!\n", ctr/60, ctr%60);
-	cgiWebsockBroadcast("/websocket/ws.cgi", buff, os_strlen(buff), WEBSOCK_FLAG_NONE);
+//static void ICACHE_FLASH_ATTR websockTimerCb(void *arg) {
+//	static int ctr=0;
+//	char buff[128];
+//	ctr++;
+//	os_sprintf(buff, "Up for %d minutes %d seconds!\n", ctr/60, ctr%60);
+//	cgiWebsockBroadcast("/websocket/ws.cgi", buff, os_strlen(buff), WEBSOCK_FLAG_NONE);
+//}
+
+void ICACHE_FLASH_ATTR sendLedStatus()
+{
+    char buff[128];
+    uint8_t ledStatus = ioGetLed();
+    os_sprintf(buff, "{\"led\":\"%s\"}", (ledStatus) ? "on" : "off" );
+    cgiWebsockBroadcast("/websocket/ws.cgi", buff, os_strlen(buff), WEBSOCK_FLAG_NONE);
 }
 
 //On reception of a message, send "You sent: " plus whatever the other side sent
 void myWebsocketRecv(Websock *ws, char *data, int len, int flags) {
-	int i;
+/*	int i;
 	char buff[128];
 	os_sprintf(buff, "You sent: ");
 	for (i=0; i<len; i++) buff[i+10]=data[i];
 	buff[i+10]=0;
-	cgiWebsocketSend(ws, buff, os_strlen(buff), WEBSOCK_FLAG_NONE);
+    cgiWebsocketSend(ws, buff, os_strlen(buff), WEBSOCK_FLAG_NONE);*/
 }
 
 //Websocket connected. Install reception handler and send welcome message.
 void myWebsocketConnect(Websock *ws) {
 	ws->recvCb=myWebsocketRecv;
-	cgiWebsocketSend(ws, "Hi, Websocket!", 14, WEBSOCK_FLAG_NONE);
+//	cgiWebsocketSend(ws, "Hi, Websocket!", 14, WEBSOCK_FLAG_NONE);
 }
 
 //On reception of a message, echo it back verbatim
@@ -166,6 +174,7 @@ static void ICACHE_FLASH_ATTR prHeapTimerCb(void *arg) {
 void user_init(void) {
 	stdoutInit();
 	ioInit();
+    ioLedChangeHandler(sendLedStatus);
 	captdnsInit();
 
 	// 0x40200000 is the base address for spi flash memory mapping, ESPFS_POS is the position
@@ -177,13 +186,15 @@ void user_init(void) {
 #endif
 	httpdInit(builtInUrls, 80);
 #ifdef SHOW_HEAP_USE
-	os_timer_disarm(&prHeapTimer);
-	os_timer_setfn(&prHeapTimer, prHeapTimerCb, NULL);
-	os_timer_arm(&prHeapTimer, 3000, 1);
+    //Norbi
+    //os_timer_disarm(&prHeapTimer);
+    //os_timer_setfn(&prHeapTimer, prHeapTimerCb, NULL);
+    //os_timer_arm(&prHeapTimer, 3000, 1);
 #endif
-	os_timer_disarm(&websockTimer);
-	os_timer_setfn(&websockTimer, websockTimerCb, NULL);
-	os_timer_arm(&websockTimer, 1000, 1);
+    //Norbi
+    //os_timer_disarm(&websockTimer);
+    //os_timer_setfn(&websockTimer, websockTimerCb, NULL);
+    //os_timer_arm(&websockTimer, 1000, 1);
 	os_printf("\nReady\n");
 }
 
