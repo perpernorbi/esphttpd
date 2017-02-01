@@ -27,18 +27,25 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
 		//Connection aborted. Clean up.
 		return HTTPD_CGI_DONE;
 	}
-	len=httpdFindArg(connData->post->buff, "led", buff, sizeof(buff));
-	if (len!=0) {
-        if (buff[0] == 't')
-            ioLedToggle();
-        else
-            ioLed(atoi(buff));
-	}
+
+    if (connData->requestType == HTTPD_METHOD_POST) {
+        len=httpdFindArg(connData->post->buff, "led", buff, sizeof(buff));
+        if (len!=0) {
+            switch (buff[0]) {
+            case 't':
+                ioLedToggle();
+                break;
+            case '0':
+                ioLed(0);
+            case '1':
+                ioLed(1);
+            }
+        }
+    }
     if (ioGetLed())
         httpdSend(connData, "on", 2);
     else
         httpdSend(connData, "off", 3);
-    //httpdRedirect(connData, "led.tpl");
 	return HTTPD_CGI_DONE;
 }
 
