@@ -14,25 +14,55 @@
 <a href="/wifi">do so.</a>
 -->
 </div>
-<script>
+<script language="javascript" type="text/javascript">
 var onBulb = document.getElementById('on');
 var offBulb = document.getElementById('off');
+var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
 
+function updateLightBulb(state) {
+if (state == "on") {
+    onBulb.style.opacity = 1;
+    offBulb.style.opacity = 0;
+} else {
+    onBulb.style.opacity = 0;
+    offBulb.style.opacity = 1;
+}
+
+}
 function toggle() {
     var ajax = new XMLHttpRequest();
-    ajax.onreadystatechange = function() {
-        if (ajax.readyState == 4) {
-            if (ajax.responseText == "on") {
-                onBulb.style.opacity = 0;
-                offBulb.style.opacity = 1;
-            } else {
-                onBulb.style.opacity = 1;
-                offBulb.style.opacity = 0;
-            }
-        }
-    }
     ajax.open('POST', 'led.cgi');
     ajax.send('led=t');
 }
+
+function init()
+{
+    testWebSocket();
+}
+
+  function testWebSocket()
+  {
+    websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) { onOpen(evt) };
+    websocket.onmessage = function(evt) { onMessage(evt) };
+  }
+
+  function onOpen(evt)
+  {
+  }
+
+  function onMessage(evt)
+  {
+    state = JSON.parse(evt.data).led;
+    updateLightBulb(state);
+  }
+
+  function doSend(message)
+  {
+    writeToScreen("SENT: " + message);
+    websocket.send(message);
+  }
+
+  window.addEventListener("load", init, false);
 </script>
 </body></html>
