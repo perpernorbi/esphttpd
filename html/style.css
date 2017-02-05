@@ -23,6 +23,7 @@ h1 {
 #on {
     position: absolute;
     height: 100%;
+    opacity: 0;
 }
 
 #off {
