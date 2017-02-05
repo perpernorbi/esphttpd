@@ -57,3 +57,9 @@ user/stdout.h
 user/user_main.c
 html/index.tpl
 html/style.css
+html/wifi/wifi.tpl
+html/wifi/style.css
+html/wifi/icons.png
+html/wifi/connecting.html
+html/wifi/140medley.min.js
+html/scripts.js
