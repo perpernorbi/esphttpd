@@ -1,6 +1,7 @@
 <html><head><title>%devicename%</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" type="text/css" href="skeleton.css">
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>

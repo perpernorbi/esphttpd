@@ -40,7 +40,10 @@ ul.topnav {
 }
 
 /* Float the list items side by side */
-ul.topnav li {float: right;}
+ul.topnav li {
+    float: right;
+    margin-bottom: 0em;
+}
 
 /* Style the links inside the list items */
 ul.topnav li a {
