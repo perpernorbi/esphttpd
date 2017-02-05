@@ -7,16 +7,14 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
-		<div id="main">
-			<ul class="topnav" id="myTopnav">
-				<li><a href="/wifi">Wifi</a></li>
-			</ul>
-			<h1>%devicename%</h1>
-			<div id="bulb">
-				<img id="on"  src="bulb_on.png" onclick="toggle()"></img>
-				<img id="off" src="bulb_off.png" onclick="toggle()"></img>
-			</div>
-		</div>
+                <ul class="topnav" id="myTopnav">
+                        <li><a href="/wifi">Wifi</a></li>
+                </ul>
+                <h1>%devicename%</h1>
+                <div id="bulb">
+                        <img id="on"  src="bulb_on.png" onclick="toggle()"></img>
+                        <img id="off" src="bulb_off.png" onclick="toggle()"></img>
+                </div>
 		<script src="scripts.js"></script>
 	</body>
 </html>
