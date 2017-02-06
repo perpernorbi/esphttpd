@@ -21,13 +21,13 @@
                     <br>
                     WiFi password, if applicable: <br />
                     <input type="text" name="passwd" val="%WiFiPasswd%"> <br />
-                    <input type="submit" name="connect" value="Connect!">
+                    <input class="button-primary" type="submit" name="connect" value="Connect!">
                 </p>
             </form>
             </div>
         </div>
         <ul class="topnav" id="myTopnav">
-            <li><a href="javascript:void(0)" onclick="openWifiNav()">Wifi</a></li>
+            <li><a href="javascript:void(0)" onclick="openWifiNav()"><img src="wifi.png"/><span> Wifi</span></a></li>
         </ul>
         <h1>%devicename%</h1>
         <div id="bulb">

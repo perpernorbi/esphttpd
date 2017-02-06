@@ -54,11 +54,16 @@ ul.topnav li a {
     padding: 14px 16px;
     text-decoration: none;
     transition: 0.3s;
-    font-size: 17px;
+    //font-size: 17px;
 }
 
 /* Change background color of links on hover */
 ul.topnav li a:hover {background-color: #555;}
+
+ul.topnav li a img {height: 1em;}
+@media screen and (max-width: 400px) {
+    ul.topnav li a span {display: none;}
+}
 
 /* The Overlay (background) */
 .overlay {
@@ -78,13 +83,14 @@ ul.topnav li a:hover {background-color: #555;}
 /* Position the content inside the overlay */
 .overlay-content {
     position: relative;
-    top: 25%; /* 25% from the top */
-    width: 100%; /* 100% width */
-    text-align: left; /* Centered text/links */
-    margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
-    padding-left: 100px;
+    top: 10%;
+    width: 100%;
+    text-align: left;
+    margin-top: 30px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
 }
-
 /* Position the close button (top right corner) */
 .overlay .closebtn {
     position: absolute;
