@@ -63,3 +63,5 @@ html/wifi/icons.png
 html/wifi/connecting.html
 html/wifi/140medley.min.js
 html/scripts.js
+user/json.c
+user/json.h

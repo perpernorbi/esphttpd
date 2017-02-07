@@ -27,6 +27,7 @@ some pictures of cats.
 #include "webpages-espfs.h"
 #include "cgiwebsocket.h"
 #include "cgi-test.h"
+#include "json.h"
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
 //#define SHOW_HEAP_USE
@@ -46,6 +47,47 @@ int myPassFn(HttpdConnData *connData, int no, char *user, int userLen, char *pas
 //		return 1;
 	}
 	return 0;
+}
+
+int ICACHE_FLASH_ATTR cgiWiFiStatus (HttpdConnData *connData)
+{
+    httpdStartResponse(connData, 200);
+    httpdHeader(connData, "Content-Type", "text/json");
+    httpdEndHeaders(connData);
+
+    char buff[1024];
+    buff[0] = 0;
+    JSONBeginObject(buff);
+    switch (wifi_get_opmode()) {
+    case 1:
+        JSONAddKeyValuePairStr(buff, "WiFiMode", "Client");
+        break;
+    case 2:
+        JSONAddKeyValuePairStr(buff, "WiFiMode", "SoftAP");
+        break;
+    case 3:
+        JSONAddKeyValuePairStr(buff, "WiFiMode", "STA+AP");
+        break;
+    }
+
+    struct station_config stconf;
+    wifi_station_get_config(&stconf);
+
+    JSONAddKeyValuePairStr(buff, "currSsid", (const char*)stconf.ssid);
+
+    struct ip_info info;
+    wifi_get_ip_info(0, &info);
+    JSONAddKey(buff, "network");
+    JSONBeginObject(buff);
+    JSONAddKeyValuePairIpAddr(buff, "ip", info.ip);
+    JSONAddKeyValuePairIpAddr(buff, "gw", info.gw);
+    JSONAddKeyValuePairIpAddr(buff, "netmask", info.netmask);
+    JSONEndObject(buff);
+
+    JSONEndObject(buff);
+    os_printf(buff);
+    httpdSend(connData, buff, -1);
+    return HTTPD_CGI_DONE;
 }
 
 
@@ -126,6 +168,7 @@ HttpdBuiltInUrl builtInUrls[]={
 	{"/wifi/wifi.tpl", cgiEspFsTemplate, tplWlan},
 	{"/wifi/connect.cgi", cgiWiFiConnect, NULL},
 	{"/wifi/connstatus.cgi", cgiWiFiConnStatus, NULL},
+    {"/wifi/wifistatus.cgi", cgiWiFiStatus, NULL},
 	{"/wifi/setmode.cgi", cgiWiFiSetMode, NULL},
 
     {"/led-ws.cgi", cgiWebsocket, wsLedConnect},
