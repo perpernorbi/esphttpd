@@ -7,7 +7,7 @@ var wsUri = "ws://192.168.10.163/led-ws.cgi";
 function toggle() {
     var ajax = new XMLHttpRequest();
 //    ajax.open('POST', 'led.cgi');
-    ajax.open('POST', 'http://192.168.10.163/led.cgi');
+    ajax.open('POST', 'led.cgi');
     ajax.send('led=t');
 }
 
