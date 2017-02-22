@@ -2,7 +2,7 @@
 body {
     background: #afcbe0;
     background-image: url("bottom_image.png"); /* fallback */
-    background-image: url("bottom_image.png"), linear-gradient(#afcbe0, #eaeeed);
+    background-image: url("bottom_image.png"), linear-gradient(#afcbe0 0%, #eaeeed 85%, #ffb45d 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: bottom;
