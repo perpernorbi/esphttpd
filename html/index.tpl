@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="skeleton.css">
+        <script type="text/javascript" src="wifi/140medley.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
@@ -13,7 +14,7 @@
 
             <!-- Overlay content -->
             <div class="overlay-content">
-            <p>Current WiFi mode: %WiFiMode%</p>
+            <p>Current WiFi mode: <span id="wifimode"></span></p>
             <p>Note: %WiFiapwarn%</p>
             <form name="wifiform" action="connect.cgi" method="post">
                 <p>To connect to a WiFi network, please select one of the detected networks...<br>
