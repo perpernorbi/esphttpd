@@ -1,0 +1,1 @@
+s/%devicename%/testDevice/g

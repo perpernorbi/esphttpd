@@ -11,3 +11,5 @@ ldscript_memspecific.ld
 eagle.app.sym
 *.autosave
 *.creator.user
+*.swp
+test/html
