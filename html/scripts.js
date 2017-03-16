@@ -1,12 +1,10 @@
 var onBulb = document.getElementById('on');
 var offBulb = document.getElementById('off');
-//var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
-var wsUri = "ws://192.168.10.163/led-ws.cgi";
+var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
 var currAp = "testAp"
 
 function toggle() {
     var ajax = new XMLHttpRequest();
-//    ajax.open('POST', 'led.cgi');
     ajax.open('POST', 'led.cgi');
     ajax.send('led=t');
 }
