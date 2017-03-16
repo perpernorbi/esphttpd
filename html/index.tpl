@@ -15,7 +15,7 @@
             <!-- Overlay content -->
             <div class="overlay-content">
             <p>Current WiFi mode: <span id="wifimode"></span></p>
-            <p>Note: %WiFiapwarn%</p>
+            <p><span id="wifinote"></span></p>
             <form name="wifiform" action="connect.cgi" method="post">
                 <p>To connect to a WiFi network, please select one of the detected networks...<br>
                     <div id="aps">Scanning...</div>
