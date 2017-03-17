@@ -19,8 +19,7 @@
             <form name="wifiform" action="wifi/connect.cgi" method="post">
                 <p>To connect to a WiFi network, please select one of the detected networks...<br>
                     <div id="aps">Scanning...</div>
-                    <br>
-                    WiFi password, if applicable: <br />
+                    <p>WiFi password, if applicable:</p>
                     <input type="text" name="passwd" val="%WiFiPasswd%"> <br />
                     <input class="button-primary" type="submit" name="connect" value="Connect!">
                 </p>
