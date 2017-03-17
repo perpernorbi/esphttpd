@@ -99,7 +99,25 @@ ul.topnav li a img {height: 1em;}
     font-size: 60px;
 }
 
-.overlay-content p{
+.overlay-content p,
+.overlay-content span,
+.overlay-content label {
     color: gray;
     margin-bottom: 0px;
+}
+
+.overlay-content label {
+    display: inline;
+    vertical-align: middle;
+    font-weight: 400;
+}
+
+.overlay-content ul {
+    list-style: none;
+    margin-top: 15px;
+}
+
+.overlay-content input[type="radio"] {
+  margin-bottom: 0px;
+  vertical-align: middle;
 }
