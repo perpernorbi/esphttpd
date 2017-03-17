@@ -121,3 +121,7 @@ ul.topnav li a img {height: 1em;}
   margin-bottom: 0px;
   vertical-align: middle;
 }
+
+.overlay-content input[type=text] {
+    margin-top: 1rem
+}
