@@ -66,9 +66,9 @@ function renderWifiStatus(plaintextdata)
 
     document.getElementById("wifimode").innerHTML = data.WiFiMode;
     if (data.WiFiMode == "SoftAP") {
-        document.getElementById("wifinote").innerHTML = "<b>Can't scan in this mode.</b> Click <a href=\"setmode.cgi?mode=3\">here</a> to go to STA+AP mode."
+        document.getElementById("wifinote").innerHTML = "<b>Can't scan in this mode.</b> Click <a href=\"wifi/setmode.cgi?mode=3\">here</a> to go to STA+AP mode."
     } else {
-        document.getElementById("wifinote").innerHTML = "Click <a href=\"setmode.cgi?mode=2\">here</a> to go to standalone AP mode."
+        document.getElementById("wifinote").innerHTML = "Click <a href=\"wifi/setmode.cgi?mode=2\">here</a> to go to standalone AP mode."
     }
 }
 
