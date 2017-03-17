@@ -1,7 +1,7 @@
 var onBulb = document.getElementById('on');
 var offBulb = document.getElementById('off');
 var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
-var currAp = "testAp"
+var currAp = ""
 
 function toggle() {
     var ajax = new XMLHttpRequest();
@@ -62,6 +62,8 @@ function updateWifiStatus()
 function renderWifiStatus(plaintextdata)
 {
     data = JSON.parse(plaintextdata);
+    currAp = data.currSsid;
+
     document.getElementById("wifimode").innerHTML = data.WiFiMode;
     if (data.WiFiMode == "SoftAP") {
         document.getElementById("wifinote").innerHTML = "<b>Can't scan in this mode.</b> Click <a href=\"setmode.cgi?mode=3\">here</a> to go to STA+AP mode."
