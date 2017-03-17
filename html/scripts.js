@@ -5,8 +5,8 @@ var currAp = ""
 
 function toggle() {
     var ajax = new XMLHttpRequest();
-    ajax.open('POST', 'led.cgi');
-    ajax.send('led=t');
+    ajax.open("POST", "led.cgi");
+    ajax.send("led=t");
 }
 
 function init() {
