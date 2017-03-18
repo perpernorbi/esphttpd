@@ -37,13 +37,19 @@ function updateLightBulb(state) {
 
 /* Open when someone clicks on the span element */
 function openWifiNav() {
-    document.getElementById("wifiNav").style.width = "100%";
+    if (document.body.clientWidth > 800) {
+        document.getElementById("wifiNav").style.width = "350px";
+        document.getElementById("main").style.marginLeft = "350px";
+    } else {
+        document.getElementById("wifiNav").style.width = "100%";
+    }
     updateWifiStatus();
 }
 
 /* Close when someone clicks on the "x" symbol inside the overlay */
 function closeWifiNav() {
     document.getElementById("wifiNav").style.width = "0%";
+    document.getElementById("main").style.marginLeft = "0px";
 }
 
 function updateWifiStatus()

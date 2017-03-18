@@ -26,13 +26,15 @@
             </form>
             </div>
         </div>
-        <ul class="topnav" id="myTopnav">
-            <li><a href="javascript:void(0)" onclick="openWifiNav()"><img src="wifi.png"/><span> Wifi</span></a></li>
-        </ul>
-        <h1>%devicename%</h1>
-        <div id="bulb">
-            <img id="on"  src="bulb_on.png" onclick="toggle()"></img>
-            <img id="off" src="bulb_off.png" onclick="toggle()"></img>
+        <div id="main">
+            <ul class="topnav" id="myTopnav">
+                <li><a href="javascript:void(0)" onclick="openWifiNav()"><img src="wifi.png"/><span> Wifi</span></a></li>
+            </ul>
+            <h1>%devicename%</h1>
+            <div id="bulb">
+                <img id="on"  src="bulb_on.png" onclick="toggle()"></img>
+                <img id="off" src="bulb_off.png" onclick="toggle()"></img>
+            </div>
         </div>
         <script src="scripts.js"></script>
 	</body>

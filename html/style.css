@@ -30,6 +30,10 @@ h1 {
     height: 100%
 }
 
+#main {
+    transition: 0.5s;
+}
+
  /* Remove margins and padding from the list, and add a black background color */
 ul.topnav {
     list-style-type: none;
