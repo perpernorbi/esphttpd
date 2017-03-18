@@ -9,8 +9,9 @@
 	</head>
 	<body>
         <div id="wifiNav" class="overlay">
-            <!-- Button to close the overlay navigation -->
-            <a href="javascript:void(0)" class="closebtn" onclick="closeWifiNav()">&times;</a>
+            <div class="hoovernav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeWifiNav()">&times;</a>
+            </div>
 
             <!-- Overlay content -->
             <div class="overlay-content">

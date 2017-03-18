@@ -3,6 +3,8 @@ var offBulb = document.getElementById('off');
 var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
 var currAp = ""
 
+var hoovernav;
+
 function toggle() {
     var ajax = new XMLHttpRequest();
     ajax.open("POST", "led.cgi");
@@ -10,13 +12,13 @@ function toggle() {
 }
 
 function init() {
+    hoovernav = document.getElementsByClassName("hoovernav")[0];
     websocket = new WebSocket(wsUri);
     websocket.onopen = function(evt) { onOpen(evt) };
     websocket.onmessage = function(evt) { onMessage(evt) };
 }
 
-function onOpen(evt)
-{
+function onOpen(evt) {
   websocket.send("getLedStatus");
 }
 
@@ -39,17 +41,19 @@ function updateLightBulb(state) {
 function openWifiNav() {
     if (document.body.clientWidth > 800) {
         document.getElementById("wifiNav").style.width = "350px";
-        document.getElementById("main").style.marginLeft = "350px";
+        document.getElementById("main").style.marginRight = "350px";
     } else {
         document.getElementById("wifiNav").style.width = "100%";
     }
+    hoovernav.style.position="fixed";
     updateWifiStatus();
 }
 
 /* Close when someone clicks on the "x" symbol inside the overlay */
 function closeWifiNav() {
     document.getElementById("wifiNav").style.width = "0%";
-    document.getElementById("main").style.marginLeft = "0px";
+    document.getElementById("main").style.marginRight = "0px";
+    hoovernav.style.position="auto";
 }
 
 function updateWifiStatus()

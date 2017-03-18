@@ -76,7 +76,7 @@ ul.topnav li a img {height: 1em;}
     width: 0;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    left: 0;
+    right: 0;
     top: 0;
     background-color: rgb(0,0,0); /* Black fallback color */
     background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
@@ -90,7 +90,7 @@ ul.topnav li a img {height: 1em;}
     top: 10%;
     width: 100%;
     text-align: left;
-    margin-top: 30px;
+    padding-top: 30px;
     max-width: 300px;
     margin-left: auto;
     margin-right: auto;
@@ -101,6 +101,11 @@ ul.topnav li a img {height: 1em;}
     top: -25px;
     right: 20px;
     font-size: 60px;
+}
+
+.overlay .hoovernav {
+    right: 10px;
+    top: 0px;
 }
 
 .overlay-content p,
