@@ -84,8 +84,6 @@ int ICACHE_FLASH_ATTR cgiWiFiStatus (HttpdConnData *connData)
     JSONAddKeyValuePairIpAddr(buff, "netmask", info.netmask);
     JSONEndObject(buff);
 
-    JSONEndObject(buff);
-    os_printf(buff);
     httpdSend(connData, buff, -1);
     return HTTPD_CGI_DONE;
 }

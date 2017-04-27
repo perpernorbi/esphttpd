@@ -16,7 +16,7 @@ flash as a binary. Also handles the hit counter on the main page.
 #include <esp8266.h>
 #include "cgi.h"
 #include "io.h"
-
+#include "json.h"
 
 //Cgi that turns the LED on or off according to the 'led' param in the POST data
 int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
@@ -42,10 +42,19 @@ int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
             }
         }
     }
+
+    httpdStartResponse(connData, 200);
+    httpdHeader(connData, "Content-Type", "application/json; charset=utf-8");
+    httpdEndHeaders(connData);
+
+    buff[0] = '\0';
+    JSONBeginObject(buff);
     if (ioGetLed())
-        httpdSend(connData, "on", 2);
+        JSONAddKeyValuePairStr(buff,"led","on");
     else
-        httpdSend(connData, "off", 3);
+        JSONAddKeyValuePairStr(buff,"led","off");
+    JSONEndObject(buff);
+    httpdSend(connData, buff, -1);
 	return HTTPD_CGI_DONE;
 }
 
