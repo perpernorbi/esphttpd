@@ -8,11 +8,11 @@
 OUTPUT_TYPE=ota
 
 #SPI flash size, in K
-ESP_SPI_FLASH_SIZE_K=1024
+ESP_SPI_FLASH_SIZE_K=4096
 #0: QIO, 1: QOUT, 2: DIO, 3: DOUT
-ESP_FLASH_MODE=0
+ESP_FLASH_MODE=2
 #0: 40MHz, 1: 26MHz, 2: 20MHz, 15: 80MHz
-ESP_FLASH_FREQ_DIV=0
+ESP_FLASH_FREQ_DIV=2
 
 
 ifeq ("$(OUTPUT_TYPE)","separate")
@@ -55,7 +55,7 @@ MODULES		= user
 EXTRA_INCDIR	= include libesphttpd/include
 
 # libraries used in this project, mainly provided by the SDK
-LIBS		= c gcc hal phy pp net80211 wpa main lwip crypto
+LIBS		= c gcc hal phy pp net80211 wpa main lwip crypto pwm
 #Add in esphttpd lib
 LIBS += esphttpd
 

@@ -68,7 +68,7 @@ int ICACHE_FLASH_ATTR tplIndex(HttpdConnData *connData, char *token, void **arg)
     os_strcpy(buff, "Unknown");
 
     if (os_strcmp(token, "devicename") == 0) {
-        os_strcpy(buff, "Chengdu Lamp");
+        os_strcpy(buff, "Paris Lamp");
     }
 	if (os_strcmp(token, "ledstate")==0) {
         if (ioGetLed()) {
