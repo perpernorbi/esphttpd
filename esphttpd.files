@@ -66,3 +66,8 @@ html/scripts.js
 user/json.c
 user/json.h
 Makefile
+user/ledcgi.h
+user/ledcgi.c
+user/jsonparse/json.h
+user/jsonparse/jsonparse.c
+user/jsonparse/jsonparse.h

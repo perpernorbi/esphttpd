@@ -109,9 +109,48 @@ void wsLedRecv(Websock *ws, char *data, int len, int flags) {
     cgiWebsocketSend(ws, buff, strlen(buff), WEBSOCK_FLAG_NONE);
 }
 
+/*void wsDriveRecv(Websock *ws, char *data, int len, int flags) {
+    struct jsonparse_state json_state;
+    int retval = 0;
+    int direct_drive = 0;
+    int left, right;
+    if (strncmp(data, "toggle_lights", strlen("toggle_lights")) == 0) {
+        os_printf("toggle\n");
+        ioLedToggle();
+        os_printf("toggle\n");
+        return;
+    }
+    jsonparse_setup(&json_state, data, len);
+    while ((retval = jsonparse_next(&json_state)) != JSON_TYPE_ERROR) {
+        if (retval == JSON_TYPE_PAIR_NAME) {
+            if (jsonparse_strcmp_value(&json_state, "drive_mode") == 0) {
+                jsonparse_assert_next(&json_state, JSON_TYPE_STRING);
+                direct_drive = ! jsonparse_strcmp_value(&json_state, "direct");
+            } else if (jsonparse_strcmp_value(&json_state, "velocities") == 0) {
+                jsonparse_assert_next(&json_state, JSON_TYPE_ARRAY);
+                jsonparse_assert_next(&json_state, JSON_TYPE_NUMBER);
+                left = jsonparse_get_value_as_int(&json_state);
+                jsonparse_assert_next(&json_state, ',');
+                jsonparse_assert_next(&json_state, JSON_TYPE_NUMBER);
+                right = jsonparse_get_value_as_int(&json_state);
+                jsonparse_assert_next(&json_state, ']');
+            }
+        }
+    }
+
+    if (direct_drive) {
+        os_printf("drive %d, %d", left, right);
+        sendDirectVelocity(left, right);
+    }
+
+    //onOffDrive(data[0]);
+    //cgiWebsocketSend(ws, buff, strlen(buff), WEBSOCK_FLAG_NONE);
+}
+*/
+
 void wsLedConnect(Websock *ws) {
     ws->recvCb=wsLedRecv;
-//    sendLedStatus();
+    sendLedStatus();
 }
 
 #ifdef ESPFS_POS

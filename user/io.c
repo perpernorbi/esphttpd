@@ -21,9 +21,9 @@
 #define PWM_W_OUT_IO_FUNC FUNC_GPIO2
 #define PWM_W_CHANNEL 0
 
-#define PWM_R_OUT_IO_MUX  PERIPHS_IO_MUX_MTDI_U
-#define PWM_R_OUT_IO_NUM  12
-#define PWM_R_OUT_IO_FUNC FUNC_GPIO12
+#define PWM_R_OUT_IO_MUX  PERIPHS_IO_MUX_MTDO_U
+#define PWM_R_OUT_IO_NUM  15
+#define PWM_R_OUT_IO_FUNC FUNC_GPIO15
 #define PWM_R_CHANNEL 1
 
 #define PWM_G_OUT_IO_MUX  PERIPHS_IO_MUX_MTCK_U
@@ -31,9 +31,9 @@
 #define PWM_G_OUT_IO_FUNC FUNC_GPIO13
 #define PWM_G_CHANNEL 2
 
-#define PWM_B_OUT_IO_MUX  PERIPHS_IO_MUX_MTDO_U
-#define PWM_B_OUT_IO_NUM  15
-#define PWM_B_OUT_IO_FUNC FUNC_GPIO15
+#define PWM_B_OUT_IO_MUX  PERIPHS_IO_MUX_MTDI_U
+#define PWM_B_OUT_IO_NUM  12
+#define PWM_B_OUT_IO_FUNC FUNC_GPIO12
 #define PWM_B_CHANNEL 3
 
 #define PWM_PERIOD (1000)
@@ -95,6 +95,18 @@ static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg) {
         ioLedToggle();
     }
 }
+
+void ICACHE_FLASH_ATTR ioRGB(int r, int g, int b)
+{
+    //pwm_set_duty(PWM_MAX, PWM_W_CHANNEL);
+    pwm_set_duty(PWM_MAX*r/255, PWM_R_CHANNEL);
+    pwm_set_duty(PWM_MAX*g/255, PWM_G_CHANNEL);
+    pwm_set_duty(PWM_MAX*b/255, PWM_B_CHANNEL);
+    pwm_start();
+
+    ledState = 1;
+}
+
 
 void ICACHE_FLASH_ATTR ioInitButton()
 {

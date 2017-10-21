@@ -51,8 +51,8 @@ APPGEN		?= $(SDK_BASE)/tools/gen_appbin.py
 TARGET		= httpd
 
 # which modules (subdirectories) of the project to include in compiling
-MODULES		= user
-EXTRA_INCDIR	= include libesphttpd/include
+MODULES		= user user/jsonparse
+EXTRA_INCDIR	= include libesphttpd/include user/jsonparse
 
 # libraries used in this project, mainly provided by the SDK
 LIBS		= c gcc hal phy pp net80211 wpa main lwip crypto pwm
