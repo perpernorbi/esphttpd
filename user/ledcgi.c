@@ -7,6 +7,7 @@
 #endif
 
 #include "ledcgi.h"
+#include "io.h"
 #include "jsonparse/jsonparse.h"
 
 
@@ -74,6 +75,14 @@ struct ledCommand ICACHE_FLASH_ATTR ledCgiParseMessage(const char *message, int 
     }
     return retval;
 }
+
+void ICACHE_FLASH_ATTR ledCgiGetStatusJson(char *buff)
+{
+    uint8_t ledStatus = ioGetLed();
+    os_sprintf(buff, "{\"led\":\"%s\"}", (ledStatus) ? "on" : "off" );
+}
+
+
 
 #ifdef TEST
 int main()

@@ -19,62 +19,36 @@ flash as a binary. Also handles the hit counter on the main page.
 #include "json.h"
 #include "ledcgi.h"
 
-//Cgi that turns the LED on or off according to the 'led' param in the POST data
-int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
-    //int len, r, g, b;
-    char buff[1024];
+void ICACHE_FLASH_ATTR processLedMessage(const char* message, int length)
+{
+    struct ledCommand cmd;
+    cmd = ledCgiParseMessage(message, length);
+    switch (cmd.cmd) {
+    case LEDCOMMAND_OFF:
+        ioLed(0); break;
+    case LEDCOMMAND_ON:
+        ioLed(1); break;
+    case LEDCOMMAND_TOGGLE:
+        ioLedToggle(); break;
+    case LEDCOMMAND_RGB:
+        ioRGB(cmd.r, cmd.g, cmd.b); break;
+    }
+}
 
+int ICACHE_FLASH_ATTR cgiLed(HttpdConnData *connData) {
     if (connData->conn==NULL) {
         //Connection aborted. Clean up.
         return HTTPD_CGI_DONE;
     }
 
-    if (connData->requestType == HTTPD_METHOD_POST) {
-        //len=httpdFindArg(connData->post->buff, "led", buff, sizeof(buff));
-        struct ledCommand cmd;
-        cmd = ledCgiParseMessage(connData->post->buff, connData->post->buffLen);
-        switch (cmd.cmd) {
-        case LEDCOMMAND_OFF:
-            ioLed(0); break;
-        case LEDCOMMAND_ON:
-            ioLed(1); break;
-        case LEDCOMMAND_TOGGLE:
-            ioLedToggle(); break;
-        case LEDCOMMAND_RGB:
-            ioRGB(cmd.r, cmd.g, cmd.b); break;
-
-        }
-
-/*        if (len!=0) {
-            switch (buff[0]) {
-            case 't':
-                ioLedToggle();
-                break;
-            case '0':
-                ioLed(0);
-                break;
-            case '1':
-                ioLed(1);
-                break;
-            case '#':
-                sscanf(buff, "#%02x%02x%02x", &r, &g, &b);
-                ioRGB(r,g,b);
-            }
-        }
-        */
-    }
+    if (connData->requestType == HTTPD_METHOD_POST)
+        processLedMessage(connData->post->buff, connData->post->buffLen);
 
     httpdStartResponse(connData, 200);
     httpdHeader(connData, "Content-Type", "application/json; charset=utf-8");
     httpdEndHeaders(connData);
-
-    buff[0] = '\0';
-    JSONBeginObject(buff);
-    if (ioGetLed())
-        JSONAddKeyValuePairStr(buff,"led","on");
-    else
-        JSONAddKeyValuePairStr(buff,"led","off");
-    JSONEndObject(buff);
+    char buff[128];
+    ledCgiGetStatusJson(buff);
     httpdSend(connData, buff, -1);
     return HTTPD_CGI_DONE;
 }

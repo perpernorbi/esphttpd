@@ -20,6 +20,7 @@ struct ledCommand {
     uint8_t cmd;
 };
 
-struct ledCommand ledCgiParseMessage(const char *message, int len);
+struct ledCommand ICACHE_FLASH_ATTR ledCgiParseMessage(const char *message, int len);
+void ICACHE_FLASH_ATTR ledCgiGetStatusJson(char *buff);
 
 #endif // LEDCGI_H

@@ -27,6 +27,7 @@ some pictures of cats.
 #include "webpages-espfs.h"
 #include "cgiwebsocket.h"
 #include "cgi-test.h"
+#include "ledcgi.h"
 #include "json.h"
 
 //The example can print out the heap use every 3 seconds. You can use this to catch memory leaks.
@@ -88,65 +89,18 @@ int ICACHE_FLASH_ATTR cgiWiFiStatus (HttpdConnData *connData)
     return HTTPD_CGI_DONE;
 }
 
-
-void ICACHE_FLASH_ATTR getLedStatusJson(char *buff)
-{
-    uint8_t ledStatus = ioGetLed();
-    os_sprintf(buff, "{\"led\":\"%s\"}", (ledStatus) ? "on" : "off" );
-}
-
 void ICACHE_FLASH_ATTR sendLedStatus()
 {
     char buff[128];
-    getLedStatusJson(buff);
+    ledCgiGetStatusJson(buff);
     cgiWebsockBroadcast("/led-ws.cgi", buff, os_strlen(buff), WEBSOCK_FLAG_NONE);
 }
 
 
 void wsLedRecv(Websock *ws, char *data, int len, int flags) {
-    char buff[128];
-    getLedStatusJson(buff);
-    cgiWebsocketSend(ws, buff, strlen(buff), WEBSOCK_FLAG_NONE);
+    processLedMessage(data, len);
+    //sendLedStatus();
 }
-
-/*void wsDriveRecv(Websock *ws, char *data, int len, int flags) {
-    struct jsonparse_state json_state;
-    int retval = 0;
-    int direct_drive = 0;
-    int left, right;
-    if (strncmp(data, "toggle_lights", strlen("toggle_lights")) == 0) {
-        os_printf("toggle\n");
-        ioLedToggle();
-        os_printf("toggle\n");
-        return;
-    }
-    jsonparse_setup(&json_state, data, len);
-    while ((retval = jsonparse_next(&json_state)) != JSON_TYPE_ERROR) {
-        if (retval == JSON_TYPE_PAIR_NAME) {
-            if (jsonparse_strcmp_value(&json_state, "drive_mode") == 0) {
-                jsonparse_assert_next(&json_state, JSON_TYPE_STRING);
-                direct_drive = ! jsonparse_strcmp_value(&json_state, "direct");
-            } else if (jsonparse_strcmp_value(&json_state, "velocities") == 0) {
-                jsonparse_assert_next(&json_state, JSON_TYPE_ARRAY);
-                jsonparse_assert_next(&json_state, JSON_TYPE_NUMBER);
-                left = jsonparse_get_value_as_int(&json_state);
-                jsonparse_assert_next(&json_state, ',');
-                jsonparse_assert_next(&json_state, JSON_TYPE_NUMBER);
-                right = jsonparse_get_value_as_int(&json_state);
-                jsonparse_assert_next(&json_state, ']');
-            }
-        }
-    }
-
-    if (direct_drive) {
-        os_printf("drive %d, %d", left, right);
-        sendDirectVelocity(left, right);
-    }
-
-    //onOffDrive(data[0]);
-    //cgiWebsocketSend(ws, buff, strlen(buff), WEBSOCK_FLAG_NONE);
-}
-*/
 
 void wsLedConnect(Websock *ws) {
     ws->recvCb=wsLedRecv;
@@ -218,15 +172,6 @@ HttpdBuiltInUrl builtInUrls[]={
     {NULL, NULL, NULL}
 };
 
-
-#ifdef SHOW_HEAP_USE
-static ETSTimer prHeapTimer;
-
-static void ICACHE_FLASH_ATTR prHeapTimerCb(void *arg) {
-    os_printf("Heap: %ld\n", (unsigned long)system_get_free_heap_size());
-}
-#endif
-
 //Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
 void user_init(void) {
     stdoutInit();
@@ -242,16 +187,6 @@ void user_init(void) {
     espFsInit((void*)(webpages_espfs_start));
 #endif
     httpdInit(builtInUrls, 80);
-#ifdef SHOW_HEAP_USE
-    //Norbi
-    //os_timer_disarm(&prHeapTimer);
-    //os_timer_setfn(&prHeapTimer, prHeapTimerCb, NULL);
-    //os_timer_arm(&prHeapTimer, 3000, 1);
-#endif
-    //Norbi
-    //os_timer_disarm(&websockTimer);
-    //os_timer_setfn(&websockTimer, websockTimerCb, NULL);
-    //os_timer_arm(&websockTimer, 1000, 1);
     os_printf("\nReady\n");
 }
 
