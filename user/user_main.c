@@ -99,7 +99,7 @@ void ICACHE_FLASH_ATTR sendLedStatus()
 
 void wsLedRecv(Websock *ws, char *data, int len, int flags) {
     processLedMessage(data, len);
-    //sendLedStatus();
+    sendLedStatus();
 }
 
 void wsLedConnect(Websock *ws) {
@@ -139,8 +139,8 @@ should be placed above the URLs they protect.
 */
 HttpdBuiltInUrl builtInUrls[]={
     {"*", cgiRedirectApClientToHostname, "esp8266.nonet"},
-    {"/", cgiRedirect, "/index.tpl"},
-    {"/index.tpl", cgiEspFsTemplate, tplIndex},
+    {"/", cgiRedirect, "/index.html"},
+//    {"/index.tpl", cgiEspFsTemplate, tplIndex},
     {"/led.cgi", cgiLed, NULL},
 #ifdef INCLUDE_FLASH_FNS
     {"/flash/next", cgiGetFirmwareNext, &uploadParams},

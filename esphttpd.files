@@ -55,7 +55,6 @@ user/io.h
 user/stdout.c
 user/stdout.h
 user/user_main.c
-html/index.tpl
 html/style.css
 html/wifi/wifi.tpl
 html/wifi/style.css
@@ -71,3 +70,5 @@ user/ledcgi.c
 user/jsonparse/json.h
 user/jsonparse/jsonparse.c
 user/jsonparse/jsonparse.h
+html/index.html
+user/pwm.c

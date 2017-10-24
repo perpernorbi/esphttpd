@@ -55,7 +55,7 @@ MODULES		= user user/jsonparse
 EXTRA_INCDIR	= include libesphttpd/include user/jsonparse
 
 # libraries used in this project, mainly provided by the SDK
-LIBS		= c gcc hal phy pp net80211 wpa main lwip crypto pwm
+LIBS		= c gcc hal phy pp net80211 wpa main lwip crypto
 #Add in esphttpd lib
 LIBS += esphttpd
 

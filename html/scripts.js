@@ -1,7 +1,12 @@
 var onBulb = document.getElementById('on');
 var offBulb = document.getElementById('off');
-var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
+//var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
+var wsUri = "ws://192.168.10.218/led-ws.cgi"
 var currAp = ""
+var hueSlider = document.getElementById("hueSlider");
+var saturationSlider = document.getElementById("saturationSlider");
+var lightnessSlider = document.getElementById("lightnessSlider");
+var websocket;
 
 function toggle() {
     var ajax = new XMLHttpRequest();
@@ -9,10 +14,59 @@ function toggle() {
     ajax.send("led=t");
 }
 
+/**
+ * Converts an HSL color value to RGB. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes h, s, and l are contained in the set [0, 1] and
+ * returns r, g, and b in the set [0, 255].
+ *
+ * @param   {number}  h       The hue
+ * @param   {number}  s       The saturation
+ * @param   {number}  l       The lightness
+ * @return  {Array}           The RGB representation
+ */
+function hslToRgb(h, s, l){
+    var r, g, b;
+
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        var hue2rgb = function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function updateHSL()
+{
+    var h = hueSlider.value / 1000;
+    var s = saturationSlider.value / 1000;
+    var l = lightnessSlider.value / 1000;
+    rgb = hslToRgb(h, s, l);
+    var led = { led: { r: rgb[0], g: rgb[1], b: rgb[2]}};
+    websocket.send(JSON.stringify(led));
+}
+
 function init() {
     websocket = new WebSocket(wsUri);
     websocket.onopen = function(evt) { onOpen(evt) };
     websocket.onmessage = function(evt) { onMessage(evt) };
+    hueSlider.oninput = function() { updateHSL() };
+    saturationSlider.oninput = function() { updateHSL() };
+    lightnessSlider.oninput = function() { updateHSL() };
 }
 
 function onOpen(evt) {

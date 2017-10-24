@@ -37,7 +37,7 @@
 #define PWM_B_CHANNEL 3
 
 #define PWM_PERIOD (1000)
-#define PWM_MAX (PWM_PERIOD*1000/45)
+#define PWM_MAX (PWM_PERIOD)
 
 static ETSTimer resetBtntimer;
 
@@ -78,7 +78,10 @@ void ICACHE_FLASH_ATTR ioLedToggle()
     ioLed((ledState)?0:1);
 }
 
-static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg) {
+int dr,dg,db;
+
+static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg)
+{
     static int resetCnt=0;
     if (!(gpio_input_get() & BTN_GPIO_BIT)) {
         resetCnt++;
@@ -98,14 +101,15 @@ static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg) {
 
 void ICACHE_FLASH_ATTR ioRGB(int r, int g, int b)
 {
-    //pwm_set_duty(PWM_MAX, PWM_W_CHANNEL);
-    pwm_set_duty(PWM_MAX*r/255, PWM_R_CHANNEL);
-    pwm_set_duty(PWM_MAX*g/255, PWM_G_CHANNEL);
-    pwm_set_duty(PWM_MAX*b/255, PWM_B_CHANNEL);
-    pwm_start();
-
+    dr = PWM_MAX*r/255;
+    dg = PWM_MAX*g/255;
+    db = PWM_MAX*b/255;
     ledState = 1;
-}
+    //pwm_set_duty(PWM_MAX, PWM_W_CHANNEL);
+    pwm_set_duty(dr, PWM_R_CHANNEL);
+    pwm_set_duty(dg, PWM_G_CHANNEL);
+    pwm_set_duty(db, PWM_B_CHANNEL);
+    pwm_start();}
 
 
 void ICACHE_FLASH_ATTR ioInitButton()
@@ -125,7 +129,7 @@ void ICACHE_FLASH_ATTR ioInitPwm()
         {PWM_G_OUT_IO_MUX,PWM_G_OUT_IO_FUNC,PWM_G_OUT_IO_NUM},
         {PWM_B_OUT_IO_MUX,PWM_B_OUT_IO_FUNC,PWM_B_OUT_IO_NUM}
     };
-    uint32 pwm_duty_init[5] = {0, 0, 0, 0};
+    uint32 pwm_duty_init[5] = {1, 20, 30, 1};
     pwm_init(PWM_PERIOD,  pwm_duty_init, 4, io_info);
     pwm_start();
 }
