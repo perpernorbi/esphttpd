@@ -8,11 +8,33 @@ var saturationSlider = document.getElementById("saturationSlider");
 var lightnessSlider = document.getElementById("lightnessSlider");
 var websocket;
 
-function toggle() {
-    var ajax = new XMLHttpRequest();
-    ajax.open("POST", "led.cgi");
-    ajax.send("led=t");
+function getCssValuePrefix()
+{
+    var rtrnVal = '';//default to standard syntax
+    var prefixes = ['-o-', '-ms-', '-moz-', '-webkit-'];
+
+    // Create a temporary DOM object for testing
+    var dom = document.createElement('div');
+
+    for (var i = 0; i < prefixes.length; i++)
+    {
+        // Attempt to set the style
+        dom.style.background = prefixes[i] + 'linear-gradient(#000000, #ffffff)';
+
+        // Detect if the style was successfully set
+        if (dom.style.background)
+        {
+            rtrnVal = prefixes[i];
+        }
+    }
+
+    dom = null;
+    delete dom;
+
+    return rtrnVal;
 }
+
+var cssValuePrefix = getCssValuePrefix();
 
 /**
  * Converts an HSL color value to RGB. Conversion formula
@@ -50,6 +72,27 @@ function hslToRgb(h, s, l){
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
 
+function toggle() {
+    var ajax = new XMLHttpRequest();
+    ajax.open("POST", "led.cgi");
+    ajax.send("led=t");
+}
+
+function updateSliderBackgrounds()
+{
+    if ( typeof updateSliderBackgrounds.saturationSlider == 'undefined' ) {
+        updateSliderBackgrounds.saturationSlider = document.getElementById("saturationSlider")
+        updateSliderBackgrounds.lightnessSlider = document.getElementById("lightnessSlider")
+    }
+    var h = hueSlider.value / 1000;
+    saturatedRgb = hslToRgb(h, 0.5, 0.5);
+    saturatedRgb = "rgb(" + saturatedRgb[0] + ", " + saturatedRgb[1]+ ", " + saturatedRgb[2]+ ")"
+    updateSliderBackgrounds.saturationSlider.style.background =
+            cssValuePrefix + "linear-gradient(left,  #7F7F7F, " + saturatedRgb + ")"
+    updateSliderBackgrounds.lightnessSlider.style.background =
+            cssValuePrefix + "linear-gradient(left,  #000000, " + saturatedRgb + ", #FFFFFF)"
+}
+
 function updateHSL()
 {
     var h = hueSlider.value / 1000;
@@ -58,6 +101,7 @@ function updateHSL()
     rgb = hslToRgb(h, s, l);
     var led = { led: { r: rgb[0], g: rgb[1], b: rgb[2]}};
     websocket.send(JSON.stringify(led));
+    updateSliderBackgrounds();
 }
 
 function init() {
@@ -67,6 +111,7 @@ function init() {
     hueSlider.oninput = function() { updateHSL() };
     saturationSlider.oninput = function() { updateHSL() };
     lightnessSlider.oninput = function() { updateHSL() };
+    updateSliderBackgrounds();
 }
 
 function onOpen(evt) {
