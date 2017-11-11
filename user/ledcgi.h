@@ -11,12 +11,10 @@
 #define LEDCOMMAND_OFF 0
 #define LEDCOMMAND_ON 1
 #define LEDCOMMAND_TOGGLE 2
-#define LEDCOMMAND_RGB 3
+#define LEDCOMMAND_PWM 3
 
 struct ledCommand {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+    uint32_t pwm[4];
     uint8_t cmd;
 };
 

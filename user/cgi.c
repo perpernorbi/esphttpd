@@ -30,8 +30,8 @@ void ICACHE_FLASH_ATTR processLedMessage(const char* message, int length)
         ioLed(1); break;
     case LEDCOMMAND_TOGGLE:
         ioLedToggle(); break;
-    case LEDCOMMAND_RGB:
-        ioRGB(cmd.r, cmd.g, cmd.b); break;
+    case LEDCOMMAND_PWM:
+        ioPWM(cmd.pwm); break;
     }
 }
 

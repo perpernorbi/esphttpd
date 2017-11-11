@@ -16,25 +16,25 @@
 #define BTN_GPIO_BIT  BIT0
 #define BTN_GPIO_FUNC FUNC_GPIO0
 
-#define PWM_W_OUT_IO_MUX  PERIPHS_IO_MUX_GPIO2_U
-#define PWM_W_OUT_IO_NUM  2
-#define PWM_W_OUT_IO_FUNC FUNC_GPIO2
-#define PWM_W_CHANNEL 0
+#define PWM_0_OUT_IO_MUX  PERIPHS_IO_MUX_GPIO2_U
+#define PWM_0_OUT_IO_NUM  2
+#define PWM_0_OUT_IO_FUNC FUNC_GPIO2
+#define PWM_0_CHANNEL 0
 
-#define PWM_R_OUT_IO_MUX  PERIPHS_IO_MUX_MTDO_U
-#define PWM_R_OUT_IO_NUM  15
-#define PWM_R_OUT_IO_FUNC FUNC_GPIO15
-#define PWM_R_CHANNEL 1
+#define PWM_1_OUT_IO_MUX  PERIPHS_IO_MUX_MTDO_U
+#define PWM_1_OUT_IO_NUM  15
+#define PWM_1_OUT_IO_FUNC FUNC_GPIO15
+#define PWM_1_CHANNEL 1
 
-#define PWM_G_OUT_IO_MUX  PERIPHS_IO_MUX_MTCK_U
-#define PWM_G_OUT_IO_NUM  13
-#define PWM_G_OUT_IO_FUNC FUNC_GPIO13
-#define PWM_G_CHANNEL 2
+#define PWM_2_OUT_IO_MUX  PERIPHS_IO_MUX_MTCK_U
+#define PWM_2_OUT_IO_NUM  13
+#define PWM_2_OUT_IO_FUNC FUNC_GPIO13
+#define PWM_2_CHANNEL 2
 
-#define PWM_B_OUT_IO_MUX  PERIPHS_IO_MUX_MTDI_U
-#define PWM_B_OUT_IO_NUM  12
-#define PWM_B_OUT_IO_FUNC FUNC_GPIO12
-#define PWM_B_CHANNEL 3
+#define PWM_3_OUT_IO_MUX  PERIPHS_IO_MUX_MTDI_U
+#define PWM_3_OUT_IO_NUM  12
+#define PWM_3_OUT_IO_FUNC FUNC_GPIO12
+#define PWM_3_CHANNEL 3
 
 #define PWM_PERIOD (1000)
 #define PWM_MAX (PWM_PERIOD)
@@ -51,16 +51,16 @@ void ICACHE_FLASH_ATTR ioLedChangeHandler(void (*f)(void))
 
 void ICACHE_FLASH_ATTR ioLed(int ena) {
     if (ena) {
-        pwm_set_duty(PWM_MAX, PWM_W_CHANNEL);
-        pwm_set_duty(PWM_MAX, PWM_R_CHANNEL);
-        pwm_set_duty(PWM_MAX, PWM_G_CHANNEL);
-        pwm_set_duty(PWM_MAX, PWM_B_CHANNEL);
+        pwm_set_duty(PWM_MAX, PWM_0_CHANNEL);
+        pwm_set_duty(PWM_MAX, PWM_1_CHANNEL);
+        pwm_set_duty(PWM_MAX, PWM_2_CHANNEL);
+        pwm_set_duty(PWM_MAX, PWM_3_CHANNEL);
         ledState = 1;
     } else {
-        pwm_set_duty(0, PWM_W_CHANNEL);
-        pwm_set_duty(0, PWM_R_CHANNEL);
-        pwm_set_duty(0, PWM_G_CHANNEL);
-        pwm_set_duty(0, PWM_B_CHANNEL);
+        pwm_set_duty(0, PWM_0_CHANNEL);
+        pwm_set_duty(0, PWM_1_CHANNEL);
+        pwm_set_duty(0, PWM_2_CHANNEL);
+        pwm_set_duty(0, PWM_3_CHANNEL);
         ledState = 0;
     }
     pwm_start();
@@ -77,8 +77,6 @@ void ICACHE_FLASH_ATTR ioLedToggle()
 {
     ioLed((ledState)?0:1);
 }
-
-int dr,dg,db;
 
 static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg)
 {
@@ -99,17 +97,19 @@ static void ICACHE_FLASH_ATTR resetBtnTimerCb(void *arg)
     }
 }
 
-void ICACHE_FLASH_ATTR ioRGB(int r, int g, int b)
+void ICACHE_FLASH_ATTR ioPWM(const uint32_t* pwm)
 {
-    dr = PWM_MAX*r/255;
-    dg = PWM_MAX*g/255;
-    db = PWM_MAX*b/255;
-    ledState = 1;
-    //pwm_set_duty(PWM_MAX, PWM_W_CHANNEL);
-    pwm_set_duty(dr, PWM_R_CHANNEL);
-    pwm_set_duty(dg, PWM_G_CHANNEL);
-    pwm_set_duty(db, PWM_B_CHANNEL);
-    pwm_start();}
+    uint32_t pwm0 = PWM_MAX*pwm[0]/255;
+    uint32_t pwm1 = PWM_MAX*pwm[1]/255;
+    uint32_t pwm2 = PWM_MAX*pwm[2]/255;
+    uint32_t pwm3 = PWM_MAX*pwm[3]/255;
+    ledState = pwm0 || pwm1 || pwm2 || pwm3;
+    pwm_set_duty(pwm0, PWM_0_CHANNEL);
+    pwm_set_duty(pwm1, PWM_1_CHANNEL);
+    pwm_set_duty(pwm2, PWM_2_CHANNEL);
+    pwm_set_duty(pwm3, PWM_3_CHANNEL);
+    pwm_start();
+}
 
 
 void ICACHE_FLASH_ATTR ioInitButton()
@@ -124,12 +124,12 @@ void ICACHE_FLASH_ATTR ioInitButton()
 void ICACHE_FLASH_ATTR ioInitPwm()
 {
     uint32 io_info[][3] = {
-        {PWM_W_OUT_IO_MUX,PWM_W_OUT_IO_FUNC,PWM_W_OUT_IO_NUM},
-        {PWM_R_OUT_IO_MUX,PWM_R_OUT_IO_FUNC,PWM_R_OUT_IO_NUM},
-        {PWM_G_OUT_IO_MUX,PWM_G_OUT_IO_FUNC,PWM_G_OUT_IO_NUM},
-        {PWM_B_OUT_IO_MUX,PWM_B_OUT_IO_FUNC,PWM_B_OUT_IO_NUM}
+        {PWM_0_OUT_IO_MUX,PWM_0_OUT_IO_FUNC,PWM_0_OUT_IO_NUM},
+        {PWM_1_OUT_IO_MUX,PWM_1_OUT_IO_FUNC,PWM_1_OUT_IO_NUM},
+        {PWM_2_OUT_IO_MUX,PWM_2_OUT_IO_FUNC,PWM_2_OUT_IO_NUM},
+        {PWM_3_OUT_IO_MUX,PWM_3_OUT_IO_FUNC,PWM_3_OUT_IO_NUM}
     };
-    uint32 pwm_duty_init[5] = {1, 20, 30, 1};
+    uint32 pwm_duty_init[5] = {0, 0, 0, 0};
     pwm_init(PWM_PERIOD,  pwm_duty_init, 4, io_info);
     pwm_start();
 }

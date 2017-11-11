@@ -1,7 +1,7 @@
 var onBulb = document.getElementById('on');
 var offBulb = document.getElementById('off');
-//var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
-var wsUri = "ws://192.168.10.218/led-ws.cgi"
+var wsUri = "ws://"+window.location.host+"/led-ws.cgi";
+//var wsUri = "ws://192.168.10.218/led-ws.cgi"
 var currAp = ""
 var hueSlider = document.getElementById("hueSlider");
 var saturationSlider = document.getElementById("saturationSlider");
@@ -73,9 +73,8 @@ function hslToRgb(h, s, l){
 }
 
 function toggle() {
-    var ajax = new XMLHttpRequest();
-    ajax.open("POST", "led.cgi");
-    ajax.send("led=t");
+    var led = { led: "toggle"};
+    websocket.send(JSON.stringify(led));
 }
 
 function updateSliderBackgrounds()
@@ -99,7 +98,7 @@ function updateHSL()
     var s = saturationSlider.value / 1000;
     var l = lightnessSlider.value / 1000;
     rgb = hslToRgb(h, s, l);
-    var led = { led: { r: rgb[0], g: rgb[1], b: rgb[2]}};
+    var led = { led: [ 0, rgb[0], rgb[1], rgb[2]]};
     websocket.send(JSON.stringify(led));
     updateSliderBackgrounds();
 }
